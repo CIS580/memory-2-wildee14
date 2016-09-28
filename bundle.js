@@ -15,17 +15,46 @@ var cards = [0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8];
 var board = [];
 while(cards.length > 0) {
   var index = Math.floor(Math.random() * (cards.length - 1));
-  board.push({card: cards[index], flip: true});
+  board.push({card: cards[index], flip: false});
   cards.splice(index, 1);
 }
 console.log(board);
-
-// TODO: Place the cards on the board in random order
-
-canvas.onclick = function(event) {
+var state = "1";
+var player =0;
+var points = [0,0];
+var card1;
+canvas.onclick = function (event){
   event.preventDefault();
-  // TODO: determine which card was clicked on
-  // TODO: determine what to do
+  var x = Math.floor((event.clientX-3)/165);
+  var y = Math.floor((event.clientY-3)/165);
+  var card = board[y * 6 + x];
+
+  if(!card ||card.flip) return; //check for valid input
+  card.flip = true;
+  switch (state) {
+    case "1":
+      card1 =card;
+      state = "2";
+      break;
+    case "2":
+      setTimeout(function(){
+        if (card.card == card1.card){
+        points[player]++;
+        state = "wait";
+      } else {
+        card1.flip = false;
+        card.flip = false;
+        player = +!player;
+      }
+      state = "1";
+    }, 3000);
+      break;
+    case "wait":
+
+      break;
+    default:
+
+  }
 }
 
 /**
